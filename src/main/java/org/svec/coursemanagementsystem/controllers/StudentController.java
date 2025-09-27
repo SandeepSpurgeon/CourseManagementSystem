@@ -23,8 +23,13 @@ public class StudentController {
 
     @GetMapping("/data")
     public void run() {
+        logger.info("Running StudentController");
+
         this.studentService.addStudentsData();
         this.studentService.addStudentProfileDataAndStudent();
+        this.studentService.addCoursesData();
+        this.studentService.CourseAndStudents();
+        this.studentService.fetchCourseAndStudents();
     }
 
 }
