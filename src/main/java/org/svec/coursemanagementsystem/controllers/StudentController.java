@@ -24,6 +24,7 @@ public class StudentController {
     @GetMapping("/data")
     public void run() {
         this.studentService.addStudentsData();
+        this.studentService.addStudentProfileDataAndStudent();
     }
 
 }

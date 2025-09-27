@@ -17,6 +17,10 @@ public class Student {
     @Column(name = "full_name")
     private String fullName;
 
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.LAZY)
+    @JoinColumn(name = "student_profile_id")
+    private StudentProfile studentProfile;
+
 
     public Student() {
     }
@@ -47,6 +51,14 @@ public class Student {
         this.fullName = fullName;
     }
 
+    public StudentProfile getStudentProfile() {
+        return studentProfile;
+    }
+
+    public void setStudentProfile(StudentProfile studentProfile) {
+        studentProfile.setStudent(this);
+        this.studentProfile = studentProfile;
+    }
 
     @Override
     public String toString() {
