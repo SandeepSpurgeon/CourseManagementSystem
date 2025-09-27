@@ -78,9 +78,9 @@ public class StudentService {
         var sandeep = this.studentRepository.getReferenceById(1L);
         var zunaid = this.studentRepository.getReferenceById(2L);
 
-        java.setStudent(List.of(sandeep));
-        python.setStudent(List.of(zunaid));
-        ds.setStudent(List.of(sandeep, zunaid));
+        java.setStudents(List.of(sandeep));
+        python.setStudents(List.of(zunaid));
+        ds.setStudents(List.of(sandeep, zunaid));
     }
 
     @Transactional(readOnly = true)

@@ -22,6 +22,10 @@ public class Course {
                 inverseJoinColumns = @JoinColumn(name = "student_id"))
     private List<Student> students;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "instructor_id")
+    private Instructor instructor;
+
 
     public Course() {
     }
@@ -47,7 +51,7 @@ public class Course {
         return students;
     }
 
-    public void setStudent(List<Student> students) {
+    public void setStudents(List<Student> students) {
         if(this.students == null) {
             this.students = new ArrayList<>();
         }
@@ -57,6 +61,15 @@ public class Course {
         }
 
         this.students.addAll(students);
+    }
+
+    public Instructor getInstructor() {
+        return instructor;
+    }
+
+    public void setInstructor(Instructor instructor) {
+        instructor.setCourses(List.of(this));
+        this.instructor = instructor;
     }
 
 
