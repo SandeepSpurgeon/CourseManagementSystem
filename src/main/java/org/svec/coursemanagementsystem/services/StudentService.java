@@ -6,12 +6,16 @@ import org.springframework.transaction.annotation.Transactional;
 import org.svec.coursemanagementsystem.entites.Course;
 import org.svec.coursemanagementsystem.entites.Student;
 import org.svec.coursemanagementsystem.entites.StudentProfile;
+import org.svec.coursemanagementsystem.models.CourseModel;
+import org.svec.coursemanagementsystem.models.InstructorModel;
+import org.svec.coursemanagementsystem.models.StudentModel;
 import org.svec.coursemanagementsystem.repositories.CourseRepository;
 import org.svec.coursemanagementsystem.repositories.StudentProfileRepository;
 import org.svec.coursemanagementsystem.repositories.StudentRepository;
 
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentService {
@@ -94,5 +98,86 @@ public class StudentService {
         if(ds.getStudents().isEmpty()) {
             throw new RuntimeException("Students not found");
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<StudentModel> getStudents() {
+        logger.info("Fetching student data");
+
+        Student student = this.studentRepository.findById(1L).get();
+        Student student1 = this.studentRepository.findById(2L).get();
+
+        StudentModel stu = new StudentModel();
+        stu.setFullName(student.getFullName());
+        stu.setRollNo(student.getRollNo());
+        stu.setMajor(student.getStudentProfile().getMajor());
+        stu.setEmail(student.getStudentProfile().getEmail());
+        stu.setMobileNo(student.getStudentProfile().getMobileNo());
+
+
+        StudentModel stu1 = new StudentModel();
+        stu1.setFullName(student1.getFullName());
+        stu1.setRollNo(student1.getRollNo());
+        stu1.setMajor(student1.getStudentProfile().getMajor());
+        stu1.setEmail(student1.getStudentProfile().getEmail());
+        stu1.setMobileNo(student1.getStudentProfile().getMobileNo());
+
+//        // System.out.println("Courses:" + student.getCourses());
+        for(Course course: student.getCourses()) {
+
+            var instructor = new InstructorModel();
+            instructor.setFullName(course.getInstructor().getFullName());
+            instructor.setRollNo(course.getInstructor().getRollNo());
+            instructor.setDepartment(course.getInstructor().getDepartment());
+
+            var courseModel = new CourseModel();
+            courseModel.setName(course.getName());
+            courseModel.setInstructor(instructor);
+            stu.setCourse(List.of(courseModel));
+        }
+
+/*        stu.setCourse(student.getCourses().stream().map(
+                (course) -> {
+                    var courseModel = new CourseModel();
+                    courseModel.setName(course.getName());
+                    return courseModel;
+                }).collect(Collectors.toList()));*/
+
+        stu1.setCourse(student1.getCourses().stream().map(
+                        (course) -> {
+                            var instructor = new InstructorModel();
+                            instructor.setFullName(course.getInstructor().getFullName());
+                            instructor.setRollNo(course.getInstructor().getRollNo());
+                            instructor.setDepartment(course.getInstructor().getDepartment());
+
+                            var courseModel = new CourseModel();
+                            courseModel.setName(course.getName());
+                            courseModel.setInstructor(instructor);
+                            return courseModel;
+                        }).collect(Collectors.toList()));
+
+/*
+        for(Course course: student1.getCourses()) {
+            var courseModel = new CourseModel();
+            courseModel.setName(course.getName());
+            stu1.setCourse(List.of(courseModel));
+        }
+*/
+
+        /*for(Course course: student.getCourses()) {
+            System.out.println("Instructor: " + course.getInstructor());
+        }
+
+        System.out.println("Student: " + student1);
+        System.out.println("Student: " + student1.getStudentProfile());
+        System.out.println("Courses:" + student1.getCourses());
+
+        for(Course course: student1.getCourses()) {
+            System.out.println("Instructor: " + course.getInstructor());
+        }
+
+*/
+
+        return List.of(stu, stu1);
     }
 }
